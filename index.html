@@ -95,6 +95,88 @@
     <button id="dialogue-btn" class="mobile-btn">Continue Dialogue</button>
   </div>
   <script>
+    // Add cheat code menu functionality
+let cheatMenuVisible = false;
+let cheatOptions = {
+  infiniteHealth: false,
+  speedMultiplier: 1,
+  bulletSpeedMultiplier: 1,
+  infiniteAmmo: false,
+  showEnemyPositions: false,
+};
+
+// Create cheat menu UI
+const cheatMenu = document.createElement("div");
+cheatMenu.id = "cheat-menu";
+cheatMenu.style.position = "fixed";
+cheatMenu.style.top = "10px";
+cheatMenu.style.left = "10px";
+cheatMenu.style.background = "rgba(0, 0, 0, 0.8)";
+cheatMenu.style.padding = "10px";
+cheatMenu.style.color = "white";
+cheatMenu.style.display = "none";
+document.body.appendChild(cheatMenu);
+
+const updateCheatMenu = () => {
+  cheatMenu.innerHTML = `
+    <p>Cheat Menu</p>
+    <button onclick="toggleInfiniteHealth()">Infinite Health: ${cheatOptions.infiniteHealth}</button><br>
+    <button onclick="setSpeed(2)">2x Speed</button>
+    <button onclick="setSpeed(4)">4x Speed</button>
+    <button onclick="setSpeed(10)">10x Speed</button><br>
+    <button onclick="setBulletSpeed(2)">2x Bullet Speed</button>
+    <button onclick="setBulletSpeed(4)">4x Bullet Speed</button>
+    <button onclick="setBulletSpeed(10)">10x Bullet Speed</button><br>
+    <button onclick="toggleInfiniteAmmo()">Infinite Ammo: ${cheatOptions.infiniteAmmo}</button><br>
+    <button onclick="toggleShowEnemyPositions()">Show Enemy Positions: ${cheatOptions.showEnemyPositions}</button>
+  `;
+};
+
+const toggleInfiniteHealth = () => {
+  cheatOptions.infiniteHealth = !cheatOptions.infiniteHealth;
+  updateCheatMenu();
+};
+
+const setSpeed = (multiplier) => {
+  cheatOptions.speedMultiplier = multiplier;
+};
+
+const setBulletSpeed = (multiplier) => {
+  cheatOptions.bulletSpeedMultiplier = multiplier;
+};
+
+const toggleInfiniteAmmo = () => {
+  cheatOptions.infiniteAmmo = !cheatOptions.infiniteAmmo;
+  updateCheatMenu();
+};
+
+const toggleShowEnemyPositions = () => {
+  cheatOptions.showEnemyPositions = !cheatOptions.showEnemyPositions;
+  updateCheatMenu();
+};
+
+// Cheat code prompt
+window.addEventListener("keydown", (e) => {
+  if (e.key === "k") {
+    let code = prompt("Enter cheat code:");
+    if (code === "2354") {
+      cheatMenuVisible = true;
+      cheatMenu.style.display = "block";
+      updateCheatMenu();
+    }
+  }
+});
+
+// Apply cheats in game loop
+const applyCheats = () => {
+  if (cheatOptions.infiniteHealth) player.health = 100;
+  player.speed = 2.5 * cheatOptions.speedMultiplier;
+  player.bulletSpeed = 15 * cheatOptions.bulletSpeedMultiplier;
+  if (cheatOptions.infiniteAmmo) player.ammo = 999;
+};
+
+// Call applyCheats() inside your game update loop
+
     const mobile = ('ontouchstart' in window || navigator.maxTouchPoints > 0);
     if (mobile) { document.getElementById("mobile-controls").style.display = "block"; }
     const canvas = document.getElementById("game"), ctx = canvas.getContext("2d");
